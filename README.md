@@ -1,0 +1,4 @@
+CsProjArrange
+=============
+
+Arrange .csproj files.
