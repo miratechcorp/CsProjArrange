@@ -1,0 +1,3 @@
+*.cs text diff=csharp
+*.csproj text filter=csprojarrange
+*.sln text eol=crlf merge=union
