@@ -115,8 +115,8 @@ namespace CsProjArrange
                         )
                 ;
             foreach (var group in combineGroups) {
-                var first = group.First();
                 if (options.HasFlag(ArrangeOptions.CombineRootElements)) {
+                    var first = group.First();
                     // Combine multiple elements if they have the same name and attributes.
                     if (group.Count() > 1) {
                         var restGroup = group.Skip(1);
@@ -125,9 +125,13 @@ namespace CsProjArrange
                             rest.Remove();
                         }
                     }
+                    // Do the sorting.
+                    ArrangeElement(first);
+                } else {
+                    foreach (var element in group) {
+                        ArrangeElement(element);
+                    }
                 }
-                // Do the sorting.
-                ArrangeElement(first);
             }
 
             if (options.HasFlag(ArrangeOptions.SplitItemGroups)) {
@@ -154,7 +158,11 @@ namespace CsProjArrange
             }
             if (options.HasFlag(ArrangeOptions.SortRootElements)) {
                 // Sort the elements in root.
-                input.Root.ReplaceNodes(input.Root.Elements().OrderBy(x => x, nodeNameComparer).ThenBy(x => x.Attributes(), attributeKeyComparer));
+                input.Root.ReplaceNodes(
+                    input.Root.Nodes()
+                        .OrderBy(x => x, nodeNameComparer)
+                        .ThenBy(x => x.NodeType == XmlNodeType.Element ? ((XElement)x).Attributes() : null, attributeKeyComparer)
+                    );
             }
             // Backup input file if we are overwriting.
             if ((inputFile != null) && (inputFile == outputFile)) {
