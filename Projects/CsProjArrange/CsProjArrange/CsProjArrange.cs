@@ -1,4 +1,18 @@
-﻿using System;
+﻿// Copyright 2014 MIRATECH
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +27,16 @@ namespace CsProjArrange
     /// </summary>
     public class CsProjArrange
     {
-        #region Enumerations
+        private static readonly XmlNodeType[] includeXmlNodeTypes = 
+            new XmlNodeType[] {
+                XmlNodeType.Comment,
+                XmlNodeType.Element,
+                XmlNodeType.EndElement,
+                XmlNodeType.Text,
+            };
+
+        private AttributeKeyComparer attributeKeyComparer;
+        private NodeNameComparer nodeNameComparer;
 
         [Flags]
         public enum ArrangeOptions
@@ -27,31 +50,6 @@ namespace CsProjArrange
             SplitItemGroups = 1 << 4,
             NoRoot = All & ~CombineRootElements & ~SortRootElements,
         }
-
-        #endregion Enumerations
-
-        #region Constants
-
-        private static readonly XmlNodeType[] includeXmlNodeTypes = 
-            new XmlNodeType[] {
-                XmlNodeType.Comment,
-                XmlNodeType.Element,
-                XmlNodeType.EndElement,
-                XmlNodeType.Text,
-            };
-
-        #endregion Constants
-
-        #region Fields
-
-        private AttributeKeyComparer attributeKeyComparer;
-        private NodeNameComparer nodeNameComparer;
-
-        #endregion Fields
-
-        #region Methods
-
-        #region Public Methods
 
         /// <summary>
         /// Arrange the project file using the specified options.
@@ -183,10 +181,6 @@ namespace CsProjArrange
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void ArrangeElement(XElement element)
         {
             // Order by element name then by attributes.
@@ -201,43 +195,21 @@ namespace CsProjArrange
             }
         }
 
-        #endregion Private Methods
-
-        #endregion Methods
-
-        #region Nested Types
-
         /// <summary>
         /// Compares a list of attributes in order by value.
         /// </summary>
         internal class AttributeKeyComparer : IComparer<IEnumerable<XAttribute>>
         {
-            #region Properties
-
-            #region Public Properties
+            public AttributeKeyComparer(IEnumerable<string> sortAttributes)
+            {
+                SortAttributes = sortAttributes;
+            }
 
             public IEnumerable<string> SortAttributes
             {
                 get;
                 set;
             }
-
-            #endregion Public Properties
-
-            #endregion Properties
-
-            #region Constructors
-
-            public AttributeKeyComparer(IEnumerable<string> sortAttributes)
-            {
-                SortAttributes = sortAttributes;
-            }
-
-            #endregion Constructors
-
-            #region Methods
-
-            #region Public Methods
 
             public int Compare(IEnumerable<XAttribute> x, IEnumerable<XAttribute> y)
             {
@@ -269,10 +241,6 @@ namespace CsProjArrange
 
                 return 0;
             }
-
-            #endregion Public Methods
-
-            #endregion Methods
         }
 
         /// <summary>
@@ -280,9 +248,11 @@ namespace CsProjArrange
         /// </summary>
         internal class NodeNameComparer : IComparer<XNode>
         {
-            #region Properties
-
-            #region Public Properties
+            public NodeNameComparer(IList<string> stickyElementNames = null, ArrangeOptions options = ArrangeOptions.None)
+            {
+                StickyElementNames = stickyElementNames ?? new string[] { };
+                Options = options;
+            }
 
             public ArrangeOptions Options
             {
@@ -295,24 +265,6 @@ namespace CsProjArrange
                 get;
                 set;
             }
-
-            #endregion Public Properties
-
-            #endregion Properties
-
-            #region Constructors
-
-            public NodeNameComparer(IList<string> stickyElementNames = null, ArrangeOptions options = ArrangeOptions.None)
-            {
-                StickyElementNames = stickyElementNames ?? new string[] { };
-                Options = options;
-            }
-
-            #endregion Constructors
-
-            #region Methods
-
-            #region Public Methods
 
             public int Compare(XNode x, XNode y)
             {
@@ -332,10 +284,6 @@ namespace CsProjArrange
 
                 return 0;
             }
-
-            #endregion Public Methods
-
-            #region Private Methods
 
             private string GetName(XNode node)
             {
@@ -369,12 +317,6 @@ namespace CsProjArrange
 
                 return result.Name.LocalName;
             }
-
-            #endregion Private Methods
-
-            #endregion Methods
         }
-
-        #endregion Nested Types
     }
 }
