@@ -75,6 +75,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\CsProjArrangeInput.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\CsProjArrange\CsProjArrange.csproj">
       <Project>{4f8f4dbc-82f0-420f-b072-54fe64e70c86}</Project>
       <Name>CsProjArrange</Name>
