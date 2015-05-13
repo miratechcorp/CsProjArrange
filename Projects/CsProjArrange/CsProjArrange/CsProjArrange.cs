@@ -271,6 +271,63 @@ namespace CsProjArrange
             nodeNameComparer = new NodeNameComparer(stickyElementNames);
             attributeKeyComparer = new AttributeKeyComparer(sortAttributes);
 
+            CombineRootElementsAndSort(input, options);
+
+            if (options.HasFlag(ArrangeOptions.SplitItemGroups))
+            {
+                SplitItemGroups(input, stickyElementNames);
+            }
+
+            if (options.HasFlag(ArrangeOptions.SortRootElements))
+            {
+                SortRootElements(input);
+            }
+        }
+
+        private void SortRootElements(XDocument input)
+        {
+            // Sort the elements in root.
+            input.Root.ReplaceNodes(
+                input.Root.Nodes()
+                     .OrderBy(x => x, nodeNameComparer)
+                     .ThenBy(x => x.NodeType == XmlNodeType.Element ? ((XElement) x).Attributes() : null,
+                         attributeKeyComparer)
+                );
+        }
+
+        private static void SplitItemGroups(XDocument input, IList<string> stickyElementNames)
+        {
+            var ns = input.Root.Name.Namespace;
+            foreach (var group in input.Root.Elements(ns + "ItemGroup"))
+            {
+                var uniqueTypes =
+                    @group.Elements()
+                          .Select(x => x.Name)
+                          .Distinct()
+                          .OrderBy(
+                              x =>
+                              stickyElementNames.IndexOf(x.LocalName) == -1
+                                  ? int.MaxValue
+                                  : stickyElementNames.IndexOf(x.LocalName))
+                          .ThenBy(x => x.LocalName)
+                    ;
+                // Split into multiple item groups if there are multiple types included.
+                if (uniqueTypes.Count() > 1)
+                {
+                    var firstType = uniqueTypes.First();
+                    var restTypes = uniqueTypes.Skip(1).Reverse();
+                    foreach (var type in restTypes)
+                    {
+                        var newElement = new XElement(@group.Name, @group.Attributes(), @group.Elements(type));
+                        @group.AddAfterSelf(newElement);
+                    }
+                    @group.ReplaceNodes(@group.Elements(firstType));
+                }
+            }
+        }
+
+        private void CombineRootElementsAndSort(XDocument input, ArrangeOptions options)
+        {
             var combineGroups =
                 input.Root.Elements()
                      .GroupBy(
@@ -279,9 +336,9 @@ namespace CsProjArrange
                          {
                              Name = x.Name.Namespace.ToString() + ":" + x.Name.LocalName,
                              Attributes =
-                             string.Join(Environment.NewLine,
-                                 x.Attributes()
-                                  .Select(y => y.Name.Namespace.ToString() + ":" + y.Name.LocalName + ":" + y.Value)),
+                                 string.Join(Environment.NewLine,
+                                     x.Attributes()
+                                      .Select(y => y.Name.Namespace.ToString() + ":" + y.Name.LocalName + ":" + y.Value)),
                          }
                     );
 
@@ -301,52 +358,11 @@ namespace CsProjArrange
                         }
                     }
                 }
-                
+
                 foreach (var element in elementGroup)
                 {
                     ArrangeElement(element);
-                }                
-            }
-
-            if (options.HasFlag(ArrangeOptions.SplitItemGroups))
-            {
-                var ns = input.Root.Name.Namespace;
-                foreach (var group in input.Root.Elements(ns + "ItemGroup"))
-                {
-                    var uniqueTypes =
-                        @group.Elements()
-                             .Select(x => x.Name)
-                             .Distinct()
-                             .OrderBy(
-                                 x =>
-                                 stickyElementNames.IndexOf(x.LocalName) == -1
-                                     ? int.MaxValue
-                                     : stickyElementNames.IndexOf(x.LocalName))
-                             .ThenBy(x => x.LocalName)
-                        ;
-                    // Split into multiple item groups if there are multiple types included.
-                    if (uniqueTypes.Count() > 1)
-                    {
-                        var firstType = uniqueTypes.First();
-                        var restTypes = uniqueTypes.Skip(1).Reverse();
-                        foreach (var type in restTypes)
-                        {
-                            var newElement = new XElement(@group.Name, @group.Attributes(), @group.Elements(type));
-                            @group.AddAfterSelf(newElement);
-                        }
-                        @group.ReplaceNodes(@group.Elements(firstType));
-                    }
                 }
-            }
-            if (options.HasFlag(ArrangeOptions.SortRootElements))
-            {
-                // Sort the elements in root.
-                input.Root.ReplaceNodes(
-                    input.Root.Nodes()
-                         .OrderBy(x => x, nodeNameComparer)
-                         .ThenBy(x => x.NodeType == XmlNodeType.Element ? ((XElement)x).Attributes() : null,
-                             attributeKeyComparer)
-                    );
             }
         }
 
