@@ -8,9 +8,13 @@ namespace CsProjArrange.Tests
     public class UnitTest1
     {
         [Test]
-        public void TestMethod1()
+        public void GetSomeData()
         {
-            
+            var target = new CsProjArrange();
+
+            target.Arrange(@".\TestData\CsProjArrangeInput.csproj", @"CsProjArrangeExpectedDefault.csproj", null, null, CsProjArrange.ArrangeOptions.None);
+
+
         }
     }
 }
