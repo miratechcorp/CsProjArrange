@@ -68,6 +68,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Helpers\EmbeddedResourceHelper.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,15 +76,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\Expected\CsProjArrangeExpectedCombineRootElements.csproj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Expected\CsProjArrangeExpectedDefault.csproj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\CsProjArrangeInput.csproj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="TestData\Expected\CsProjArrangeExpectedCombineRootElements.csproj" />
+    <EmbeddedResource Include="TestData\Expected\CsProjArrangeExpectedDefault.csproj" />
+    <EmbeddedResource Include="TestData\Input\CsProjArrangeInput.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CsProjArrange\CsProjArrange.csproj">
