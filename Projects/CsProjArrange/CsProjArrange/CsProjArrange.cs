@@ -275,7 +275,7 @@ namespace CsProjArrange
                 input.Root.Elements()
                      .GroupBy(
                          x =>
-                         new
+                         new CombineGroups
                          {
                              Name = x.Name.Namespace.ToString() + ":" + x.Name.LocalName,
                              Attributes =
@@ -283,8 +283,8 @@ namespace CsProjArrange
                                  x.Attributes()
                                   .Select(y => y.Name.Namespace.ToString() + ":" + y.Name.LocalName + ":" + y.Value)),
                          }
-                    )
-                ;
+                    );
+
             foreach (var elementGroup in combineGroups)
             {
                 if (options.HasFlag(ArrangeOptions.CombineRootElements))
@@ -350,5 +350,10 @@ namespace CsProjArrange
             }
         }
 
+        internal struct CombineGroups
+        {
+            public string Name;
+            public string Attributes;
+        }
     }
 }
