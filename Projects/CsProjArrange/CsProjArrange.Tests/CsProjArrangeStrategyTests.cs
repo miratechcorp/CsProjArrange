@@ -9,11 +9,11 @@ using NUnit.Framework;
 namespace CsProjArrange.Tests
 {
     [TestFixture]
-    public class UnitTest1
+    public class CsProjArrangeStrategyTests
     {
-        private static CsProjArrange CreateTestTarget()
+        private static CsProjArrangeStrategy CreateTestTarget()
         {
-            return new CsProjArrange();
+            return new CsProjArrangeStrategy();
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace CsProjArrange.Tests
             var target = CreateTestTarget();
 
             // Act
-            target.CsProjArrangeStrategy.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.None);
+            target.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.None);
 
             // Assert
             XDocument expectedDocument = EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Expected.CsProjArrangeExpectedDefault.csproj");
@@ -51,7 +51,7 @@ namespace CsProjArrange.Tests
             var target = CreateTestTarget();
 
             // Act
-            target.CsProjArrangeStrategy.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.CombineRootElements);
+            target.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.CombineRootElements);
 
             // Assert
             XDocument expectedDocument = EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Expected.CsProjArrangeExpectedCombineRootElements.csproj");
@@ -66,7 +66,7 @@ namespace CsProjArrange.Tests
             var target = CreateTestTarget();
 
             // Act
-            target.CsProjArrangeStrategy.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.None);
+            target.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.None);
 
             // Assert
             XDocument expectedDocument = EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Expected.SortingInput.xml");
@@ -81,7 +81,7 @@ namespace CsProjArrange.Tests
             var target = CreateTestTarget();
 
             // Act
-            target.CsProjArrangeStrategy.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.CombineRootElements);
+            target.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.CombineRootElements);
 
             // Assert
             XDocument expectedDocument = EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Expected.SortingInputCombineRootElements.xml");
