@@ -285,31 +285,27 @@ namespace CsProjArrange
                          }
                     )
                 ;
-            foreach (var group in combineGroups)
+            foreach (var elementGroup in combineGroups)
             {
                 if (options.HasFlag(ArrangeOptions.CombineRootElements))
                 {
-                    var first = @group.First();
+                    XElement first = elementGroup.First();
                     // Combine multiple elements if they have the same name and attributes.
-                    if (@group.Count() > 1)
+                    if (elementGroup.Count() > 1)
                     {
-                        var restGroup = @group.Skip(1);
+                        var restGroup = elementGroup.Skip(1);
                         first.Add(restGroup.SelectMany(x => x.Elements()));
                         foreach (var rest in restGroup)
                         {
                             rest.Remove();
                         }
                     }
-                    // Do the sorting.
-                    ArrangeElement(first);
                 }
-                else
+                
+                foreach (var element in elementGroup)
                 {
-                    foreach (var element in @group)
-                    {
-                        ArrangeElement(element);
-                    }
-                }
+                    ArrangeElement(element);
+                }                
             }
 
             if (options.HasFlag(ArrangeOptions.SplitItemGroups))
