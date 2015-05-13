@@ -61,6 +61,17 @@ namespace CsProjArrange
         /// <param name="options">Options for the arrange.</param>
         public void Arrange(string inputFile, string outputFile, IList<string> stickyElementNames, IEnumerable<string> sortAttributes, ArrangeOptions options)
         {
+            // Load the document.
+            XDocument input;
+            if (inputFile == null)
+            {
+                input = XDocument.Load(Console.OpenStandardInput());
+            }
+            else
+            {
+                input = XDocument.Load(inputFile);
+            }
+
             // Default values.
             var encoding = new UTF8Encoding(false);
             if (stickyElementNames == null) {
@@ -93,14 +104,7 @@ namespace CsProjArrange
             // Set up sorting comparers.
             nodeNameComparer = new NodeNameComparer(stickyElementNames);
             attributeKeyComparer = new AttributeKeyComparer(sortAttributes);
-            // Load the document.
-            XDocument input;
-            if (inputFile == null) {
-                input = XDocument.Load(Console.OpenStandardInput());
-            } else {
-                input = XDocument.Load(inputFile);
-            }
-
+           
             var combineGroups =
                 input.Root.Elements()
                     .GroupBy(
