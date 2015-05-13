@@ -58,5 +58,34 @@ namespace CsProjArrange.Tests
             inputDocument.ToString().Should().BeEquivalentTo(expectedDocument.ToString());
         }
 
+        [Test]
+        public void Arrange_when_not_combineRootElements_should_return_sorted_csproj()
+        {
+            XDocument inputDocument =
+                EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Input.SortingInput.xml");
+            var target = CreateTestTarget();
+
+            // Act
+            target.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.None);
+
+            // Assert
+            XDocument expectedDocument = EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Expected.SortingInput.xml");
+            inputDocument.ToString().Should().BeEquivalentTo(expectedDocument.ToString());
+        }
+
+        [Test]
+        public void Arrange_when_combineRootElements_should_return_sorted_csproj()
+        {
+            XDocument inputDocument =
+                EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Input.SortingInput.xml");
+            var target = CreateTestTarget();
+
+            // Act
+            target.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.CombineRootElements);
+
+            // Assert
+            XDocument expectedDocument = EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Expected.SortingInputCombineRootElements.xml");
+            inputDocument.ToString().Should().BeEquivalentTo(expectedDocument.ToString());
+        }
     }
 }

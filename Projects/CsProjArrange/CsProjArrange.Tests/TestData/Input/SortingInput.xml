@@ -1,0 +1,19 @@
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build">
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CsProjArrange.cs" />
+    <Compile Include="Mono.Options\Options.cs" />
+    <Compile Include="CsProjArrangeConsole.cs" />    
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="A.cs" />
+    <Compile Include="Z.cs" />
+    <Compile Include="D.cs">
+      <SubElement Include="E.cs"/>
+      <SubElement Include="A.cs"/>
+    </Compile>
+    <Compile Include="F.cs" />
+    <Compile Include="B.cs" />
+  </ItemGroup>
+</Project>
