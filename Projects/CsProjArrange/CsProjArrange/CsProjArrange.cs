@@ -260,16 +260,9 @@ namespace CsProjArrange
                     "Otherwise",
                 };
             }
-            if (sortAttributes == null)
-            {
-                sortAttributes = new string[]
-                {
-                    "Include",
-                };
-            }
-            // Set up sorting comparers.
             nodeNameComparer = new NodeNameComparer(stickyElementNames);
-            attributeKeyComparer = new AttributeKeyComparer(sortAttributes);
+
+            attributeKeyComparer  = CreateAttributeKeyComparer(sortAttributes);
 
             CombineRootElementsAndSort(input, options);
 
@@ -282,6 +275,19 @@ namespace CsProjArrange
             {
                 SortRootElements(input);
             }
+        }
+
+        private static AttributeKeyComparer CreateAttributeKeyComparer(IEnumerable<string> sortAttributes)
+        {
+            if (sortAttributes == null)
+            {
+                sortAttributes = new string[]
+                {
+                    "Include",
+                };
+            }
+
+            return new AttributeKeyComparer(sortAttributes);
         }
 
         private void SortRootElements(XDocument input)
