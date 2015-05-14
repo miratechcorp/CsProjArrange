@@ -58,5 +58,8 @@ namespace CsProjArrange.Tests
             inputDocument.ToString().Should().BeEquivalentTo(expectedDocument.ToString());
         }
 
+        //[Test]
+        //public Given_
+
     }
 }
