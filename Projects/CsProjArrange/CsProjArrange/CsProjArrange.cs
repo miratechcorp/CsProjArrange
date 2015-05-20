@@ -77,22 +77,37 @@ namespace CsProjArrange
 
             CsProjArrangeStrategy.Arrange(input, stickyElementNames, sortAttributes, options);
 
-            // Backup input file if we are overwriting.
-            if ((inputFile != null) && (inputFile == outputFile)) {
-                File.Copy(inputFile, inputFile + ".bak", true);
-            }
+            BackupInputFile(inputFile, outputFile);
 
-            if (outputFile == null) {
+            WriteOutput(input, outputFile);
+        }
+
+        private static void WriteOutput(XDocument input, string outputFile)
+        {
+            if (outputFile == null)
+            {
                 // Write the output to standard output.
                 var writerSettings = new XmlWriterSettings();
                 writerSettings.Encoding = Encoding.UTF8;
                 writerSettings.Indent = true;
-                using (var writer = XmlWriter.Create(Console.OpenStandardOutput(), writerSettings)) {
+                using (var writer = XmlWriter.Create(Console.OpenStandardOutput(), writerSettings))
+                {
                     input.WriteTo(writer);
                 }
-            } else {
+            }
+            else
+            {
                 // Write the output file.
                 input.Save(outputFile);
+            }
+        }
+
+        private void BackupInputFile(string inputFile, string outputFile)
+        {
+            // Backup input file if we are overwriting.
+            if ((inputFile != null) && (inputFile == outputFile))
+            {
+                File.Copy(inputFile, inputFile + ".bak", true);
             }
         }
     }
