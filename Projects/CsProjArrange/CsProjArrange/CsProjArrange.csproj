@@ -57,6 +57,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeKeyComparer.cs" />
     <Compile Include="CsProjArrange.cs" />
     <Compile Include="CsProjArrangeConsole.cs" />
     <Compile Include="CsProjArrangeStrategy.cs" />

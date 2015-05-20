@@ -7,9 +7,12 @@ using System.Xml.Linq;
 
 namespace CsProjArrange
 {
+    /// <summary>
+    /// Strategy for arranging a Visual Studio csproj file
+    /// </summary>
     public class CsProjArrangeStrategy
     {
-        private CsProjArrange.AttributeKeyComparer _attributeKeyComparer;
+        private AttributeKeyComparer _attributeKeyComparer;
         private NodeNameComparer _nodeNameComparer;
 
         private void ArrangeElementByNameThenAttributes(XElement element)
@@ -70,7 +73,7 @@ namespace CsProjArrange
             }
         }
 
-        private static CsProjArrange.AttributeKeyComparer CreateAttributeKeyComparer(IEnumerable<string> sortAttributes)
+        private AttributeKeyComparer CreateAttributeKeyComparer(IEnumerable<string> sortAttributes)
         {
             if (sortAttributes == null)
             {
@@ -80,7 +83,7 @@ namespace CsProjArrange
                 };
             }
 
-            return new CsProjArrange.AttributeKeyComparer(sortAttributes);
+            return new AttributeKeyComparer(sortAttributes);
         }
 
         private void SortRootElements(XDocument input)
