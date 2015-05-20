@@ -34,7 +34,12 @@ namespace CsProjArrange
                 XmlNodeType.Text,
             };
 
-        private CsProjArrangeStrategy _csProjArrangeStrategy;
+        private readonly CsProjArrangeStrategy _csProjArrangeStrategy;
+
+        public CsProjArrange(CsProjArrangeStrategy csProjArrangeStrategy)
+        {
+            _csProjArrangeStrategy = csProjArrangeStrategy;
+        }
 
         [Flags]
         public enum ArrangeOptions
@@ -57,8 +62,7 @@ namespace CsProjArrange
         /// <param name="stickyElementNames">A list of element names which should be stuck to the top when sorting the nodes. Defaults to the values: Import, Task, PropertyGroup, ItemGroup, Target, Configuration, Platform, ProjectReference, Reference, Compile, Folder, Content, None, When, and Otherwise.</param>
         /// <param name="sortAttributes">A list of attributes which should be used to sort the elements after they have been sorted by name. Defaults to the values: Include.</param>
         /// <param name="options">Options for the arrange.</param>
-        public void Arrange(string inputFile, string outputFile, IList<string> stickyElementNames, IEnumerable<string> sortAttributes, 
-            ArrangeOptions options)
+        public void Arrange(string inputFile, string outputFile)
         {
             // Load the document.
             XDocument input;
@@ -71,7 +75,7 @@ namespace CsProjArrange
                 input = XDocument.Load(inputFile);
             }
 
-            _csProjArrangeStrategy = new CsProjArrangeStrategy(stickyElementNames, sortAttributes, options);
+            //_csProjArrangeStrategy = new CsProjArrangeStrategy(stickyElementNames, sortAttributes, options);
             _csProjArrangeStrategy.Arrange(input);
 
             BackupInputFile(inputFile, outputFile);

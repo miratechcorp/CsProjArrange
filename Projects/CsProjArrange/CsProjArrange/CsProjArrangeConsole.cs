@@ -63,11 +63,22 @@ namespace CsProjArrange
                 return;
             }
 
-            try {
-                new CsProjArrange().Arrange(inputFile, outputFile ?? inputFile, stickyElementNames, sortAttributes, options);
-            } catch (Exception e) {
+            try
+            {
+                var csProjArrange = CreateCsProjArrange(stickyElementNames, sortAttributes, options);
+                csProjArrange.Arrange(inputFile, outputFile ?? inputFile);
+            }
+            catch (Exception e) {
                 Console.Error.WriteLine("Encountered an error: {0}", e.Message);
             }
+        }
+
+        private static CsProjArrange CreateCsProjArrange(IList<string> stickyElementNames, IEnumerable<string> sortAttributes,
+            CsProjArrange.ArrangeOptions options)
+        {
+            CsProjArrangeStrategy strategy = new CsProjArrangeStrategy(stickyElementNames, sortAttributes, options);
+            CsProjArrange csProjArrange = new CsProjArrange(strategy);
+            return csProjArrange;
         }
 
         /// <summary>
