@@ -95,13 +95,5 @@ namespace CsProjArrange
                 input.Save(outputFile);
             }
         }
-
-       
-
-        internal struct CombineGroups
-        {
-            public string Name;
-            public string Attributes;
-        }
     }
 }

@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeKeyComparer.cs" />
+    <Compile Include="CombineGroups.cs" />
     <Compile Include="CsProjArrange.cs" />
     <Compile Include="CsProjArrangeConsole.cs" />
     <Compile Include="CsProjArrangeStrategy.cs" />

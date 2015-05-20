@@ -134,7 +134,7 @@ namespace CsProjArrange
                 input.Root.Elements()
                     .GroupBy(
                         x =>
-                            new CsProjArrange.CombineGroups
+                            new CombineGroups
                             {
                                 Name = x.Name.Namespace.ToString() + ":" + x.Name.LocalName,
                                 Attributes =
@@ -155,7 +155,7 @@ namespace CsProjArrange
             }
         }
 
-        private void ArrangeAllElementsInGroup(IGrouping<CsProjArrange.CombineGroups, XElement> elementGroup)
+        private void ArrangeAllElementsInGroup(IGrouping<CombineGroups, XElement> elementGroup)
         {
             foreach (var element in elementGroup)
             {
@@ -163,7 +163,7 @@ namespace CsProjArrange
             }
         }
 
-        private void CombineIdenticalRootElements(IGrouping<CsProjArrange.CombineGroups, XElement> elementGroup)
+        private void CombineIdenticalRootElements(IGrouping<CombineGroups, XElement> elementGroup)
         {
             XElement first = elementGroup.First();
             // Combine multiple elements if they have the same name and attributes.
