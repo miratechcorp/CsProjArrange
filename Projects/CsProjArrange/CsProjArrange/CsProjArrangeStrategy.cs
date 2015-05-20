@@ -12,9 +12,8 @@ namespace CsProjArrange
         private CsProjArrange.AttributeKeyComparer _attributeKeyComparer;
         private NodeNameComparer _nodeNameComparer;
 
-        private void ArrangeElement(XElement element)
+        private void ArrangeElementByNameThenAttributes(XElement element)
         {
-            // Order by element name then by attributes.
             element.ReplaceNodes(
                 element.Nodes()
                     .OrderBy(x => x, _nodeNameComparer)
@@ -22,7 +21,7 @@ namespace CsProjArrange
                 );
             // Arrange child elements.
             foreach (var child in element.Elements()) {
-                ArrangeElement(child);
+                ArrangeElementByNameThenAttributes(child);
             }
         }
 
@@ -146,22 +145,32 @@ namespace CsProjArrange
             {
                 if (options.HasFlag(CsProjArrange.ArrangeOptions.CombineRootElements))
                 {
-                    XElement first = elementGroup.First();
-                    // Combine multiple elements if they have the same name and attributes.
-                    if (elementGroup.Count() > 1)
-                    {
-                        var restGroup = elementGroup.Skip(1);
-                        first.Add(restGroup.SelectMany(x => x.Elements()));
-                        foreach (var rest in restGroup)
-                        {
-                            rest.Remove();
-                        }
-                    }
+                    CombineIdenticalRootElements(elementGroup);
                 }
 
-                foreach (var element in elementGroup)
+                ArrangeAllElementsInGroup(elementGroup);
+            }
+        }
+
+        private void ArrangeAllElementsInGroup(IGrouping<CsProjArrange.CombineGroups, XElement> elementGroup)
+        {
+            foreach (var element in elementGroup)
+            {
+                ArrangeElementByNameThenAttributes(element);
+            }
+        }
+
+        private void CombineIdenticalRootElements(IGrouping<CsProjArrange.CombineGroups, XElement> elementGroup)
+        {
+            XElement first = elementGroup.First();
+            // Combine multiple elements if they have the same name and attributes.
+            if (elementGroup.Count() > 1)
+            {
+                var restGroup = elementGroup.Skip(1);
+                first.Add(restGroup.SelectMany(x => x.Elements()));
+                foreach (var rest in restGroup)
                 {
-                    ArrangeElement(element);
+                    rest.Remove();
                 }
             }
         }
