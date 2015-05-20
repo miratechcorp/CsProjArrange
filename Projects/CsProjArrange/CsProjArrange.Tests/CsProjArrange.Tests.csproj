@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="Helpers\EmbeddedResourceHelper.cs" />
     <Compile Include="NodeNameComparerTests.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="CsProjArrangeStrategyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +86,15 @@
       <Project>{4f8f4dbc-82f0-420f-b072-54fe64e70c86}</Project>
       <Name>CsProjArrange</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\Input\SortingInput.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\Expected\SortingInput.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\Expected\SortingInputCombineRootElements.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
