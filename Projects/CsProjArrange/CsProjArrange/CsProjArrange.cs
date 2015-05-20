@@ -34,7 +34,7 @@ namespace CsProjArrange
                 XmlNodeType.Text,
             };
 
-        private readonly CsProjArrangeStrategy _csProjArrangeStrategy = new CsProjArrangeStrategy();
+        private CsProjArrangeStrategy _csProjArrangeStrategy;
 
         [Flags]
         public enum ArrangeOptions
@@ -49,11 +49,6 @@ namespace CsProjArrange
             NoRoot = All & ~CombineRootElements & ~SortRootElements,
         }
 
-        public CsProjArrangeStrategy CsProjArrangeStrategy
-        {
-            get { return _csProjArrangeStrategy; }
-        }
-
         /// <summary>
         /// Arrange the project file using the specified options.
         /// </summary>
@@ -62,7 +57,8 @@ namespace CsProjArrange
         /// <param name="stickyElementNames">A list of element names which should be stuck to the top when sorting the nodes. Defaults to the values: Import, Task, PropertyGroup, ItemGroup, Target, Configuration, Platform, ProjectReference, Reference, Compile, Folder, Content, None, When, and Otherwise.</param>
         /// <param name="sortAttributes">A list of attributes which should be used to sort the elements after they have been sorted by name. Defaults to the values: Include.</param>
         /// <param name="options">Options for the arrange.</param>
-        public void Arrange(string inputFile, string outputFile, IList<string> stickyElementNames, IEnumerable<string> sortAttributes, ArrangeOptions options)
+        public void Arrange(string inputFile, string outputFile, IList<string> stickyElementNames, IEnumerable<string> sortAttributes, 
+            ArrangeOptions options)
         {
             // Load the document.
             XDocument input;
@@ -75,7 +71,8 @@ namespace CsProjArrange
                 input = XDocument.Load(inputFile);
             }
 
-            CsProjArrangeStrategy.Arrange(input, stickyElementNames, sortAttributes, options);
+            _csProjArrangeStrategy = new CsProjArrangeStrategy();
+            _csProjArrangeStrategy.Arrange(input, stickyElementNames, sortAttributes, options);
 
             BackupInputFile(inputFile, outputFile);
 

@@ -3,7 +3,6 @@ using System.IO;
 using System.Xml.Linq;
 using CsProjArrange.Tests.Helpers;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 
 namespace CsProjArrange.Tests
@@ -17,13 +16,14 @@ namespace CsProjArrange.Tests
         }
 
         [Test]
+        [Ignore]
         public void GetSomeData()
         {
             XDocument inputDocument =
                 EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Input.CsProjArrangeInput.csproj");
-            var target = new CsProjArrange();
+            var target = CreateTestTarget();
 
-            target.CsProjArrangeStrategy.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.CombineRootElements);
+            target.Arrange(inputDocument, null, null, CsProjArrange.ArrangeOptions.CombineRootElements);
 
             inputDocument.Save(@"CsProjArrangeExpectedCombineRootElements.csproj");
         }
