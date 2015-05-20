@@ -14,6 +14,38 @@ namespace CsProjArrange
     {
         private AttributeKeyComparer _attributeKeyComparer;
         private NodeNameComparer _nodeNameComparer;
+        private IList<string> _stickyElementNames;
+        private readonly IEnumerable<string> _sortAttributes;
+        private readonly CsProjArrange.ArrangeOptions _options;
+
+        public CsProjArrangeStrategy(IList<string> stickyElementNames, IEnumerable<string> sortAttributes, CsProjArrange.ArrangeOptions options)
+        {
+            _stickyElementNames = stickyElementNames ?? new string[]
+            {
+                // Primary
+                "Task",
+                "PropertyGroup",
+                "ItemGroup",
+                "Target",
+                // Secondary: PropertyGroup
+                "Configuration",
+                "Platform",
+                // Secondary: ItemGroup
+                "ProjectReference",
+                "Reference",
+                "Compile",
+                "Folder",
+                "Content",
+                "None",
+                // Secondary: Choose
+                "When",
+                "Otherwise",
+            };
+
+
+            _sortAttributes = sortAttributes;
+            _options = options;
+        }
 
         private void ArrangeElementByNameThenAttributes(XElement element)
         {
@@ -28,46 +60,20 @@ namespace CsProjArrange
             }
         }
 
-        public void Arrange(XDocument input, IList<string> stickyElementNames, IEnumerable<string> sortAttributes, CsProjArrange.ArrangeOptions options)
-        {
-            // Default values.
-            var encoding = new UTF8Encoding(false);
-            if (stickyElementNames == null)
+        public void Arrange(XDocument input)
+        {           
+            _nodeNameComparer = new NodeNameComparer(_stickyElementNames);
+
+            _attributeKeyComparer  = CreateAttributeKeyComparer(_sortAttributes);
+
+            CombineRootElementsAndSort(input, _options);
+
+            if (_options.HasFlag(CsProjArrange.ArrangeOptions.SplitItemGroups))
             {
-                stickyElementNames = new string[]
-                {
-                    // Primary
-                    "Task",
-                    "PropertyGroup",
-                    "ItemGroup",
-                    "Target",
-                    // Secondary: PropertyGroup
-                    "Configuration",
-                    "Platform",
-                    // Secondary: ItemGroup
-                    "ProjectReference",
-                    "Reference",
-                    "Compile",
-                    "Folder",
-                    "Content",
-                    "None",
-                    // Secondary: Choose
-                    "When",
-                    "Otherwise",
-                };
-            }
-            _nodeNameComparer = new NodeNameComparer(stickyElementNames);
-
-            _attributeKeyComparer  = CreateAttributeKeyComparer(sortAttributes);
-
-            CombineRootElementsAndSort(input, options);
-
-            if (options.HasFlag(CsProjArrange.ArrangeOptions.SplitItemGroups))
-            {
-                SplitItemGroups(input, stickyElementNames);
+                SplitItemGroups(input, _stickyElementNames);
             }
 
-            if (options.HasFlag(CsProjArrange.ArrangeOptions.SortRootElements))
+            if (_options.HasFlag(CsProjArrange.ArrangeOptions.SortRootElements))
             {
                 SortRootElements(input);
             }
