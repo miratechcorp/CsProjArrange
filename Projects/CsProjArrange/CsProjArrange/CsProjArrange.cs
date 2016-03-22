@@ -75,7 +75,6 @@ namespace CsProjArrange
                 input = XDocument.Load(inputFile);
             }
 
-            //_csProjArrangeStrategy = new CsProjArrangeStrategy(stickyElementNames, sortAttributes, options);
             _csProjArrangeStrategy.Arrange(input);
 
             BackupInputFile(inputFile, outputFile);
