@@ -35,6 +35,11 @@ namespace CsProjArrange
             "Otherwise",
         };
 
+        private readonly string[] _defaultKeepOrderElementNames =
+        {
+            "Target",
+        };
+
         private readonly string[] _defaultSortAttributes =
         {
             "Include",
@@ -43,13 +48,17 @@ namespace CsProjArrange
         private AttributeKeyComparer _attributeKeyComparer;
         private NodeNameComparer _nodeNameComparer;
         private readonly List<string> _stickyElementNames;
+        private readonly List<string> _keepOrderElementNames;
         private readonly List<string> _sortAttributes;
         private readonly CsProjArrange.ArrangeOptions _options;
 
-        public CsProjArrangeStrategy(IEnumerable<string> stickyElementNames, IEnumerable<string> sortAttributes, CsProjArrange.ArrangeOptions options)
+        public CsProjArrangeStrategy(IEnumerable<string> stickyElementNames, IEnumerable<string> keepOrderElementNames,
+            IEnumerable<string> sortAttributes, CsProjArrange.ArrangeOptions options)
         {
             _stickyElementNames = (stickyElementNames ?? new[] {DefaultMarker}).ToList();
             ReplaceDefaultMarker(_stickyElementNames, _defaultStickyElementNames);
+            _keepOrderElementNames = (keepOrderElementNames ?? new[] { DefaultMarker }).ToList();
+            ReplaceDefaultMarker(_keepOrderElementNames, _defaultKeepOrderElementNames);
             _sortAttributes = (sortAttributes ?? new[] {DefaultMarker}).ToList();
             ReplaceDefaultMarker(_sortAttributes, _defaultSortAttributes);
             _options = options;
@@ -66,13 +75,19 @@ namespace CsProjArrange
 
         private void ArrangeElementByNameThenAttributes(XElement element)
         {
-            element.ReplaceNodes(
-                element.Nodes()
-                    .OrderBy(x => x, _nodeNameComparer)
-                    .ThenBy(x => x.NodeType == XmlNodeType.Element ? ((XElement)x).Attributes() : null, _attributeKeyComparer)
-                );
+            if (!_keepOrderElementNames.Contains(element.Name.LocalName))
+            {
+                element.ReplaceNodes(
+                    element.Nodes()
+                        .OrderBy(x => x, _nodeNameComparer)
+                        .ThenBy(x => x.NodeType == XmlNodeType.Element ? ((XElement) x).Attributes() : null,
+                            _attributeKeyComparer)
+                    );
+            }
+
             // Arrange child elements.
-            foreach (var child in element.Elements()) {
+            foreach (var child in element.Elements())
+            {
                 ArrangeElementByNameThenAttributes(child);
             }
         }

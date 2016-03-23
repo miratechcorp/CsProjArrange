@@ -35,8 +35,10 @@ Here is the help listing you can see by running `CsProjArrange -?`.
                                    default.
       -o, --output=VALUE         Set the output file name. Standard output is the
                                    default.
-      -s, --sticky=VALUE         Comma separated list of elements names which
+      -s, --sticky=VALUE         Comma separated list of element names which
                                    should be stuck to the top.
+      -k, --keeporder=VALUE      Comma separated list of element names where
+                                   children should not be sorted.
       -a, --attributes=VALUE     Comma separated list of attributes to sort on.
       -p, --options=VALUE        Specify options
 
@@ -59,6 +61,8 @@ When no command line options are specified, the following defaults take effect.
    - `None`
    - `When`
    - `Otherwise`
+ - The list of elements where children should not be sorted is the `[Default]` value,
+     which expands to just `Target`.
  - The list of attributes is the `[Default]` value, which expands to just `Include`.
  - All of the following options are selected:
    - `CombineRootElements`

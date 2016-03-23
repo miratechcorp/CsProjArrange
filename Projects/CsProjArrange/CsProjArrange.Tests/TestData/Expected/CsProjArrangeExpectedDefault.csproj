@@ -83,6 +83,10 @@
       <Visible>False</Visible>
     </BootstrapperPackage>
   </ItemGroup>
+  <Target Name="SampleTarget">
+    <Message Text="This is a sample target" />
+    <Exec Command="echo done" />
+  </Target>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

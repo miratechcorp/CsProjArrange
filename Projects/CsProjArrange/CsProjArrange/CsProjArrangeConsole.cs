@@ -33,6 +33,7 @@ namespace CsProjArrange
             string inputFile = null;
             string outputFile = null;
             IEnumerable<string> stickyElementNames = null;
+            IEnumerable<string> keepOrderElementNames = null;
             IEnumerable<string> sortAttributes = null;
             CsProjArrange.ArrangeOptions options = CsProjArrange.ArrangeOptions.All;
 
@@ -40,7 +41,8 @@ namespace CsProjArrange
                 { "?|help", "Display this usage message.", x => help = x != null },
                 { "i|input=", "Set the input file name. Standard input is the default.", x => inputFile = x },
                 { "o|output=", "Set the output file name. Standard output is the default.", x => outputFile = x },
-                { "s|sticky=", "Comma separated list of elements names which should be stuck to the top.", x => stickyElementNames = x.Split(',') },
+                { "s|sticky=", "Comma separated list of element names which should be stuck to the top.", x => stickyElementNames = x.Split(',') },
+                { "k|keeporder=", "Comma separated list of element names where children should not be sorted.", x => keepOrderElementNames = x.Split(',') },
                 { "a|attributes=", "Comma separated list of attributes to sort on.", x => sortAttributes = x.Split(',') },
                 { "p|options=", "Specify options", x => Enum.TryParse<CsProjArrange.ArrangeOptions>(x, out options) },
             };
@@ -65,7 +67,7 @@ namespace CsProjArrange
 
             try
             {
-                var csProjArrange = CreateCsProjArrange(stickyElementNames, sortAttributes, options);
+                var csProjArrange = CreateCsProjArrange(stickyElementNames, keepOrderElementNames, sortAttributes, options);
                 csProjArrange.Arrange(inputFile, outputFile ?? inputFile);
             }
             catch (Exception e) {
@@ -73,10 +75,10 @@ namespace CsProjArrange
             }
         }
 
-        private static CsProjArrange CreateCsProjArrange(IEnumerable<string> stickyElementNames, IEnumerable<string> sortAttributes,
-            CsProjArrange.ArrangeOptions options)
+        private static CsProjArrange CreateCsProjArrange(IEnumerable<string> stickyElementNames, IEnumerable<string> keepOrderElementNames,
+            IEnumerable<string> sortAttributes, CsProjArrange.ArrangeOptions options)
         {
-            CsProjArrangeStrategy strategy = new CsProjArrangeStrategy(stickyElementNames, sortAttributes, options);
+            CsProjArrangeStrategy strategy = new CsProjArrangeStrategy(stickyElementNames, keepOrderElementNames, sortAttributes, options);
             CsProjArrange csProjArrange = new CsProjArrange(strategy);
             return csProjArrange;
         }
@@ -87,7 +89,7 @@ namespace CsProjArrange
         /// <param name="os"></param>
         private void Help(OptionSet os)
         {
-            Console.WriteLine("Usage: " + System.AppDomain.CurrentDomain.FriendlyName + " [-?|--help] [-iINPUT|--input=INPUT] [-oOUTPUT|--output=OUTPUT] [-sSTICKY|--sticky=STICKY] [-aSORTATTRIBUTES|--attributes=SORTATTRIBUTES]");
+            Console.WriteLine("Usage: " + System.AppDomain.CurrentDomain.FriendlyName + " [-?|--help] [-iINPUT|--input=INPUT] [-oOUTPUT|--output=OUTPUT] [-sSTICKY|--sticky=STICKY] [-kKEEPORDER|--keeporder=KEEPORDER] [-aSORTATTRIBUTES|--attributes=SORTATTRIBUTES]");
             Console.WriteLine();
             Console.WriteLine("Option:");
             os.WriteOptionDescriptions(Console.Out);
