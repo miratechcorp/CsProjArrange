@@ -44,7 +44,7 @@ When no command line options are specified, the following defaults take effect.
 
  - The input comes from standard input.
  - The output goes to standard output.
- - The list of sticky element names is:
+ - The list of sticky element names is the `[Default]` value, which expands to:
    - `Task`
    - `PropertyGroup`
    - `ItemGroup`
@@ -59,7 +59,7 @@ When no command line options are specified, the following defaults take effect.
    - `None`
    - `When`
    - `Otherwise`
- - The list of attributes just include `Include`.
+ - The list of attributes is the `[Default]` value, which expands to just `Include`.
  - All of the following options are selected:
    - `CombineRootElements`
      - This will combine root elements which have the same name and the same attribute values.

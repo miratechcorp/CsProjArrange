@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -12,39 +11,57 @@ namespace CsProjArrange
     /// </summary>
     public class CsProjArrangeStrategy
     {
+        private const string DefaultMarker = "[Default]";
+
+        private readonly string[] _defaultStickyElementNames =
+        {
+            // Primary
+            "Task",
+            "PropertyGroup",
+            "ItemGroup",
+            "Target",
+            // Secondary: PropertyGroup
+            "Configuration",
+            "Platform",
+            // Secondary: ItemGroup
+            "ProjectReference",
+            "Reference",
+            "Compile",
+            "Folder",
+            "Content",
+            "None",
+            // Secondary: Choose
+            "When",
+            "Otherwise",
+        };
+
+        private readonly string[] _defaultSortAttributes =
+        {
+            "Include",
+        };
+
         private AttributeKeyComparer _attributeKeyComparer;
         private NodeNameComparer _nodeNameComparer;
-        private IList<string> _stickyElementNames;
-        private readonly IEnumerable<string> _sortAttributes;
+        private readonly List<string> _stickyElementNames;
+        private readonly List<string> _sortAttributes;
         private readonly CsProjArrange.ArrangeOptions _options;
 
-        public CsProjArrangeStrategy(IList<string> stickyElementNames, IEnumerable<string> sortAttributes, CsProjArrange.ArrangeOptions options)
+        public CsProjArrangeStrategy(IEnumerable<string> stickyElementNames, IEnumerable<string> sortAttributes, CsProjArrange.ArrangeOptions options)
         {
-            _stickyElementNames = stickyElementNames ?? new string[]
-            {
-                // Primary
-                "Task",
-                "PropertyGroup",
-                "ItemGroup",
-                "Target",
-                // Secondary: PropertyGroup
-                "Configuration",
-                "Platform",
-                // Secondary: ItemGroup
-                "ProjectReference",
-                "Reference",
-                "Compile",
-                "Folder",
-                "Content",
-                "None",
-                // Secondary: Choose
-                "When",
-                "Otherwise",
-            };
-
-
-            _sortAttributes = sortAttributes;
+            _stickyElementNames = (stickyElementNames ?? new[] {DefaultMarker}).ToList();
+            ReplaceDefaultMarker(_stickyElementNames, _defaultStickyElementNames);
+            _sortAttributes = (sortAttributes ?? new[] {DefaultMarker}).ToList();
+            ReplaceDefaultMarker(_sortAttributes, _defaultSortAttributes);
             _options = options;
+        }
+
+        private static void ReplaceDefaultMarker(List<string> collection, IList<string> defaultValues)
+        {
+            if (collection.Contains(DefaultMarker))
+            {
+                collection.Remove(DefaultMarker);
+                collection.AddRange(defaultValues);
+            }
         }
 
         private void ArrangeElementByNameThenAttributes(XElement element)
@@ -81,14 +98,6 @@ namespace CsProjArrange
 
         private AttributeKeyComparer CreateAttributeKeyComparer(IEnumerable<string> sortAttributes)
         {
-            if (sortAttributes == null)
-            {
-                sortAttributes = new string[]
-                {
-                    "Include",
-                };
-            }
-
             return new AttributeKeyComparer(sortAttributes);
         }
 

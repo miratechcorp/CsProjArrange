@@ -32,7 +32,7 @@ namespace CsProjArrange
             bool help = false;
             string inputFile = null;
             string outputFile = null;
-            IList<string> stickyElementNames = null;
+            IEnumerable<string> stickyElementNames = null;
             IEnumerable<string> sortAttributes = null;
             CsProjArrange.ArrangeOptions options = CsProjArrange.ArrangeOptions.All;
 
@@ -73,7 +73,7 @@ namespace CsProjArrange
             }
         }
 
-        private static CsProjArrange CreateCsProjArrange(IList<string> stickyElementNames, IEnumerable<string> sortAttributes,
+        private static CsProjArrange CreateCsProjArrange(IEnumerable<string> stickyElementNames, IEnumerable<string> sortAttributes,
             CsProjArrange.ArrangeOptions options)
         {
             CsProjArrangeStrategy strategy = new CsProjArrangeStrategy(stickyElementNames, sortAttributes, options);
