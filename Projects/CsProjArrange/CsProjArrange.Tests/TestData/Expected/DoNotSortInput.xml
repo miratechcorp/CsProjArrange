@@ -1,0 +1,15 @@
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build">
+  <Sort>
+    <A />
+    <B />
+    <C />
+  </Sort>
+  <DoNotSort>
+    <F />
+    <E>
+      <A />
+      <B />
+    </E>
+    <D />
+  </DoNotSort>
+</Project>

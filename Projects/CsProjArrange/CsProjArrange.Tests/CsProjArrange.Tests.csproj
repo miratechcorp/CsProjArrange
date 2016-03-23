@@ -96,6 +96,12 @@
   <ItemGroup>
     <EmbeddedResource Include="TestData\Expected\SortingInputCombineRootElements.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\Input\DoNotSortInput.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\Expected\DoNotSortInput.xml" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

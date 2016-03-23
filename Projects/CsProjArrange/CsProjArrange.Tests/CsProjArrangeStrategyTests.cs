@@ -78,6 +78,20 @@ namespace CsProjArrange.Tests
         }
 
         [Test]
+        public void Arrange_when_some_elements_are_not_to_be_sorted_sort_the_other_elements_csproj()
+        {
+            XDocument inputDocument =
+                EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Input.DoNotSortInput.xml");
+            var target = CreateTestTarget(null, new[] {"DoNotSort"}, null, CsProjArrange.ArrangeOptions.None);
+
+            // Act
+            target.Arrange(inputDocument);
+
+            XDocument expectedDocument = EmbeddedResourceHelper.ExtractManifestResourceAsXDocument("TestData.Expected.DoNotSortInput.xml");
+            inputDocument.ToString().Should().BeEquivalentTo(expectedDocument.ToString());
+        }
+
+        [Test]
         public void Arrange_when_combineRootElements_should_return_sorted_csproj()
         {
             XDocument inputDocument =
