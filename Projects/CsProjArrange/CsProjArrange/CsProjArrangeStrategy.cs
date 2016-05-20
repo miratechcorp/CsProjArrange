@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,8 @@ namespace CsProjArrange
     /// </summary>
     public class CsProjArrangeStrategy
     {
+        private const string NameOfFakeNodeForLastComment = "\x03A9";
+
         private AttributeKeyComparer _attributeKeyComparer;
         private NodeNameComparer _nodeNameComparer;
         private IList<string> _stickyElementNames;
@@ -96,11 +98,63 @@ namespace CsProjArrange
         {
             // Sort the elements in root.
             input.Root.ReplaceNodes(
-                input.Root.Nodes()
-                    .OrderBy(x => x, _nodeNameComparer)
-                    .ThenBy(x => x.NodeType == XmlNodeType.Element ? ((XElement) x).Attributes() : null,
-                        _attributeKeyComparer)
+                UnfoldComments(
+                    FoldComments(input.Root.Nodes())
+                    .OrderBy(x => x.Element, _nodeNameComparer)
+                    .ThenBy(x => x.Element.NodeType == XmlNodeType.Element ? x.Element.Attributes() : null, _attributeKeyComparer))
                 );
+        }
+
+        private class XElementWithComments
+        {
+            public XElement Element { get; set; }
+
+            public IList<XComment> Comments { get; set; } = new List<XComment>();
+        }
+
+        private IEnumerable<XElementWithComments> FoldComments(IEnumerable<XNode> nodes)
+        {
+            var elements = new List<XElementWithComments>();
+
+            XElementWithComments current = new XElementWithComments();
+            foreach (var node in nodes)
+            {
+                switch (node.NodeType)
+                {
+                    case XmlNodeType.Comment:
+                        current.Comments.Add(node as XComment);
+                        break;
+                    case XmlNodeType.Element:
+                        current.Element = node as XElement;
+                        elements.Add(current);
+                        current = new XElementWithComments();
+                        break;
+                }
+            }
+
+            // fold last standing comment into fake element
+            if (current.Comments.Any())
+            {
+                current.Element = new XElement(NameOfFakeNodeForLastComment);
+                elements.Add(current);
+            }
+
+            return elements;
+        }
+
+        private IEnumerable<XNode> UnfoldComments(IEnumerable<XElementWithComments> elements)
+        {
+            var nodes = new List<XNode>();
+            foreach (var element in elements)
+            {
+                nodes.AddRange(element.Comments);
+                if (element.Element.Name != NameOfFakeNodeForLastComment)
+                {
+                    nodes.Add(element.Element);
+                }
+            }
+
+            return nodes;
         }
 
         private void SplitItemGroups(XDocument input, IList<string> stickyElementNames)
