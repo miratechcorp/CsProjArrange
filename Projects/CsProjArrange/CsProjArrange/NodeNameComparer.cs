@@ -38,7 +38,7 @@ namespace CsProjArrange
             var stickyElement2 = StickyElementNames.IndexOf(yName);
             if ((stickyElement1 == -1) && (stickyElement2 == -1))
             {
-                return String.Compare(xName, yName);
+                return String.Compare(xName, yName, StringComparison.InvariantCulture);
             }
             return Compare(stickyElement1, stickyElement2);
         }
