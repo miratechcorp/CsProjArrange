@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -48,7 +49,7 @@ namespace CsProjArrange
                 {
                     yValue = yAttribute.Value;
                 }
-                int result = string.Compare(xValue ?? string.Empty, yValue ?? string.Empty);
+                int result = string.Compare(xValue ?? string.Empty, yValue ?? string.Empty, StringComparison.InvariantCulture);
                 if (result != 0)
                 {
                     return result;
