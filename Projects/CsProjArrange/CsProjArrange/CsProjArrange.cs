@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -48,10 +47,10 @@ namespace CsProjArrange
             All = -1,
             CombineRootElements = 1 << 0,
             KeepCommentWithNext = 1 << 1,
-            KeepImportWithNext = 1 << 2,
-            SortRootElements = 1 << 3,
-            SplitItemGroups = 1 << 4,
+            SortRootElements = 1 << 2,
+            SplitItemGroups = 1 << 3,
             NoRoot = All & ~CombineRootElements & ~SortRootElements,
+            NoSortRootElements = ~SortRootElements,
         }
 
         /// <summary>
