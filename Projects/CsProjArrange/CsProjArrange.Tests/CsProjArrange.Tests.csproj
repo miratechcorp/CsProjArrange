@@ -3,37 +3,43 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B4D45E23-3043-474A-996D-C87BB3F80821}</ProjectGuid>
-    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CsProjArrange.Tests</RootNamespace>
     <AssemblyName>CsProjArrange.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsCodedUITest>False</IsCodedUITest>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{B4D45E23-3043-474A-996D-C87BB3F80821}</ProjectGuid>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <RootNamespace>CsProjArrange.Tests</RootNamespace>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TestProjectType>UnitTest</TestProjectType>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CsProjArrange\CsProjArrange.csproj">
+      <Name>CsProjArrange</Name>
+      <Project>{4f8f4dbc-82f0-420f-b072-54fe64e70c86}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions, Version=3.3.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.3.3.0\lib\net45\FluentAssertions.dll</HintPath>
@@ -55,22 +61,10 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
   <ItemGroup>
+    <Compile Include="CsProjArrangeStrategyTests.cs" />
     <Compile Include="Helpers\EmbeddedResourceHelper.cs" />
     <Compile Include="NodeNameComparerTests.cs" />
-    <Compile Include="CsProjArrangeStrategyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -79,30 +73,19 @@
   <ItemGroup>
     <EmbeddedResource Include="TestData\Expected\CsProjArrangeExpectedCombineRootElements.csproj" />
     <EmbeddedResource Include="TestData\Expected\CsProjArrangeExpectedDefault.csproj" />
+    <EmbeddedResource Include="TestData\Expected\DoNotSortInput.xml" />
+    <EmbeddedResource Include="TestData\Expected\SortingInput.xml" />
+    <EmbeddedResource Include="TestData\Expected\SortingInputCombineRootElements.xml" />
     <EmbeddedResource Include="TestData\Input\CsProjArrangeInput.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CsProjArrange\CsProjArrange.csproj">
-      <Project>{4f8f4dbc-82f0-420f-b072-54fe64e70c86}</Project>
-      <Name>CsProjArrange</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="TestData\Input\DoNotSortInput.xml" />
     <EmbeddedResource Include="TestData\Input\SortingInput.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\Expected\SortingInput.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\Expected\SortingInputCombineRootElements.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\Input\DoNotSortInput.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\Expected\DoNotSortInput.xml" />
-  </ItemGroup>
   <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
         <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -119,6 +102,11 @@
         </Reference>
       </ItemGroup>
     </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

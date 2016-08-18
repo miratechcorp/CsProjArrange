@@ -1,3 +1,4 @@
 *.cs text diff=csharp
 *.csproj text filter=csprojarrange
+/Projects/CsProjArrange/CsProjArrange.Tests/TestData/**/*.csproj -filter
 *.sln text eol=crlf merge=union
